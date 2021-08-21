@@ -5,13 +5,31 @@ import {
 	EmojiHappyIcon,
 	VideoCameraIcon,
 } from '@heroicons/react/solid';
+import { useRef } from 'react';
+import { db } from '../firebase';
+import firebase from 'firebase';
 
 const InputBox = () => {
+	const inputRef = useRef();
+
 	const [session] = useSession();
+
 	const post = ev => {
 		ev.preventDefault();
+		if (!inputRef.current.value) return;
+
+		db.collection('posts').add({
+			message: inputRef.current.value,
+			name: session.user.name,
+			email: session.user.email,
+			image: session.user.image,
+			timestamps: firebase.firestore.FieldValue.serverTimestamp(),
+		});
+
+		inputRef.current.value = '';
 		console.log('submitted post');
 	};
+
 	return (
 		<div className="bg-white p-2 rounded-2xl shadow-md font-medium mt-6">
 			<div className="flex space-x-4 p-4 items-center">
@@ -25,11 +43,12 @@ const InputBox = () => {
 				/>
 				<form className="flex flex-1">
 					<input
+						ref={inputRef}
 						className="rounded-full h-12 bg-gray-100 flex-grow px-5 focus:outline-none"
 						type="text"
 						placeholder={`${session.user.name} what' on your mind?`}
 					/>
-					<button type="submit" onClick={post}>
+					<button type="submit" onClick={post} className="hidden">
 						Submit
 					</button>
 				</form>
