@@ -66,7 +66,9 @@ const Header = () => {
 					layout="fixed"
 				/>
 
-				<p className="whitespace-nowrap pr-3 font-semibold">Israel Ojeifo</p>
+				<p className="whitespace-nowrap pr-3 font-semibold">
+					{session.user.name}
+				</p>
 				<ViewGridIcon className="icon" />
 				<ChatIcon className="icon" />
 				<BellIcon className="icon" />
