@@ -1,3 +1,4 @@
+import Image from 'next/image';
 const Post = ({ name, message, email, postImage, image, timestamp }) => {
 	return (
 		<div className="flex flex-col">
@@ -18,6 +19,18 @@ const Post = ({ name, message, email, postImage, image, timestamp }) => {
 				</div>
 				<p className="pt-4">{message}</p>
 			</div>
+
+			{postImage && (
+				<div className="relative h-56 md:h-56 bg-white">
+					<Image
+						unoptimized={process.env.ENVIRONMENT !== 'PRODUCTION'}
+						src={postImage}
+						objectFit="cover"
+						alt="Post Image"
+						layout="fill"
+					/>
+				</div>
+			)}
 		</div>
 	);
 };
