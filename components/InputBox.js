@@ -5,12 +5,14 @@ import {
 	EmojiHappyIcon,
 	VideoCameraIcon,
 } from '@heroicons/react/solid';
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 import { db } from '../firebase';
 import firebase from 'firebase';
 
 const InputBox = () => {
-	const inputRef = useRef();
+	const inputRef = useRef(null);
+	const filePickerRef = useRef(null);
+	const [imageToPost, setImageToPost] = useState(null);
 
 	const [session] = useSession();
 
@@ -29,6 +31,25 @@ const InputBox = () => {
 		inputRef.current.value = '';
 		console.log('submitted post');
 	};
+
+	const addImageToPost = ev => {
+		{
+			/* Reading user file */
+		}
+		const reader = new FileReader();
+		if (ev.target.files[0]) {
+			reader.readAsDataURL(ev.target.files[0]);
+		}
+
+		{
+			/* Async call on when the file loads */
+		}
+		reader.onload = readerEv => {
+			setImageToPost(readerEv.target.result);
+		};
+	};
+
+	const detachImage = () => setImageToPost(null);
 
 	return (
 		<div className="bg-white p-2 rounded-2xl shadow-md font-medium mt-6">
@@ -52,6 +73,19 @@ const InputBox = () => {
 						Submit
 					</button>
 				</form>
+				{imageToPost && (
+					<div
+						className="flex flex-col filter hover:brightness-110 transition duration-150 transform hover:scale-105 cursor-pointer"
+						onClick={detachImage}
+					>
+						<img
+							className="h-10 object-contain"
+							src={imageToPost}
+							alt="uploaded Image"
+						/>
+						<p className="text-xs text-red-500 text-center">Remove</p>
+					</div>
+				)}
 			</div>
 			<div className="flex justify-evenly p-3 border-t">
 				<div className="inputIcon">
@@ -59,9 +93,18 @@ const InputBox = () => {
 					<p className="text-xs sm:text-sm">Live Video</p>
 				</div>
 
-				<div className="inputIcon">
+				<div
+					className="inputIcon"
+					onClick={() => filePickerRef.current.click()}
+				>
 					<CameraIcon className="h-7 text-green-400" />
 					<p className="text-xs sm:text-sm">Photo/Video</p>
+					<input
+						ref={filePickerRef}
+						onChange={addImageToPost}
+						type="file"
+						hidden
+					/>
 				</div>
 				<div className="inputIcon">
 					<EmojiHappyIcon className="h-7 text-yellow-300" />
