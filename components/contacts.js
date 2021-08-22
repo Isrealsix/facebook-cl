@@ -7,8 +7,8 @@ const contacts = [
 		name: 'Mark Zucherberg',
 		id: 'fb-110',
 	},
-	{ src: 'https:/links.papareact.com/d0c', name: 'Harry Potter', id: 'fb-120' },
-	{ src: 'https:/links.papareact.com/6gg', name: 'James Bond', id: 'fb-120' },
+	{ src: 'https:/links.papareact.com/d0c', name: 'Harry Potter', id: 'fb-129' },
+	{ src: 'https:/links.papareact.com/6gg', name: 'James Bond', id: 'fb-412' },
 	{ src: 'https:/links.papareact.com/r57', name: 'The Queen', id: 'fb-099' },
 ];
 
