@@ -6,7 +6,7 @@ import {
 	VideoCameraIcon,
 } from '@heroicons/react/solid';
 import { useState, useRef } from 'react';
-import { db } from '../firebase';
+import { db, storage } from '../firebase';
 import firebase from 'firebase';
 
 const InputBox = () => {
@@ -20,13 +20,48 @@ const InputBox = () => {
 		ev.preventDefault();
 		if (!inputRef.current.value) return;
 
-		db.collection('posts').add({
-			message: inputRef.current.value,
-			name: session.user.name,
-			email: session.user.email,
-			image: session.user.image,
-			timestamps: firebase.firestore.FieldValue.serverTimestamp(),
-		});
+		db.collection('posts')
+			.add({
+				message: inputRef.current.value,
+				name: session.user.name,
+				email: session.user.email,
+				image: session.user.image,
+				timestamps: firebase.firestore.FieldValue.serverTimestamp(),
+			})
+			.then(doc => {
+				if (imageToPost) {
+					const uploadTask = storage
+						.ref(`posts/${doc.id}`)
+						.putString(imageToPost, 'data_url');
+
+					detachImage();
+
+					uploadTask.on(
+						'state_change',
+						null,
+						error => console.error(error),
+						() => {
+							{
+								/* Uploaded
+								Saving the image to the specific user's post in the DB
+								*/
+							}
+							storage
+								.ref('posts')
+								.child(doc.id)
+								.getDownloadURL()
+								.then(url => {
+									db.collection('posts').doc(doc.id).set(
+										{
+											postImage: url,
+										},
+										{ merge: true }
+									);
+								});
+						}
+					);
+				}
+			});
 
 		inputRef.current.value = '';
 		console.log('submitted post');
