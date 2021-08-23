@@ -3,8 +3,8 @@ import StoryCard from './StoryCard';
 const storyData = [
 	{
 		name: 'Israel Ojeifo',
-		src: 'https://links.papareact.com/zof',
-		profile: 'https://links.papareact.com/l4v',
+		src: 'https://i.ibb.co/KwHPHhw/IMG-20210815-162534.jpg',
+		profile: 'https://i.ibb.co/tshYhsd/download.jpg',
 		id: 'fb-z-0',
 	},
 	{
